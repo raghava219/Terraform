@@ -66,6 +66,7 @@ The `terraform` folder contains the configuration files of the environment to 
 Start declaring your environment by specifying the Terraform backend. You can choose `[local](https://www.terraform.io/language/settings/backends/local)` which means that all the state files will be stored in the local directory. You could also choose a `[gcs](https://www.terraform.io/language/settings/backends/gcs)` backend but let’s keep it simple.
 
 ```	
+# Following is content of backend.tf
 terraform {
 		backend "local" {}	
 	}
@@ -77,6 +78,7 @@ terraform {
 Declare the variables used in the Terraform files. You need to change the `project_id` variable according to the ID of the project in which you want to deploy the resources. Of course, you also can change the `region`.
 
 ```
+# Following is the content of variables.tf
 variable "project_id" {
 
 default = "<YOUR-PROJECT-ID>"
@@ -95,6 +97,8 @@ default = "europe-west1"
 Declare the connection to the google [provider](https://www.terraform.io/language/providers).
 
 ```
+# Following is content of main.tf
+
 provider "google" {
 
 project = var.project_id
@@ -108,6 +112,8 @@ region = var.region
 
 Declare the two Google Cloud Storage buckets respectively to store the code of the Cloud Function and to upload files.
 ```
+# Following is content of main.tf
+
 resource "google_storage_bucket" "function_bucket" {
 
 name = "${var.project_id}-function"
@@ -132,6 +138,8 @@ location = var.region
 Last step: declare the Cloud Function. This requires compressing the source code into a zip file and uploading it to a bucket for storage. The source code can then be accessed when creating the Cloud Function with Terraform.
 
 ```
+# Following is content of function.tf
+
 # Generates an archive of the source code compressed as a .zip file.
 
 data "archive_file" "source" {
